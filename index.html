@@ -1,0 +1,355 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Slimlon — Game Engine Developer</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg: #0a0c10;
+      --surface: #111318;
+      --surface2: #1a1d24;
+      --border: rgba(255,255,255,0.08);
+      --border-accent: rgba(59,130,246,0.5);
+      --text: #e8eaf0;
+      --muted: #6b7280;
+      --accent: #3b82f6;
+      --accent-dim: rgba(59,130,246,0.12);
+    }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Inter', system-ui, sans-serif;
+      line-height: 1.6;
+    }
+
+    a { color: inherit; text-decoration: none; }
+
+    .container {
+      max-width: 760px;
+      margin: 0 auto;
+      padding: 0 1.5rem;
+    }
+
+    /* NAV */
+    nav {
+      padding: 1.25rem 0;
+      border-bottom: 1px solid var(--border);
+    }
+    nav .inner {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .logo {
+      font-size: 15px;
+      font-weight: 600;
+      letter-spacing: 0.02em;
+      color: var(--text);
+    }
+    .logo span { color: var(--accent); }
+    .nav-links { display: flex; gap: 1.5rem; }
+    .nav-links a {
+      font-size: 13px;
+      color: var(--muted);
+      transition: color 0.2s;
+    }
+    .nav-links a:hover { color: var(--text); }
+
+    /* HERO */
+    .hero {
+      padding: 5rem 0 3.5rem;
+      border-bottom: 1px solid var(--border);
+    }
+    .hero-eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 12px;
+      color: var(--accent);
+      background: var(--accent-dim);
+      padding: 4px 12px;
+      border-radius: 20px;
+      margin-bottom: 1.5rem;
+      border: 1px solid var(--border-accent);
+    }
+    .hero-eyebrow::before {
+      content: '';
+      width: 6px;
+      height: 6px;
+      background: var(--accent);
+      border-radius: 50%;
+      animation: pulse 2s infinite;
+    }
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.3; }
+    }
+    h1 {
+      font-size: clamp(2rem, 6vw, 3.25rem);
+      font-weight: 700;
+      line-height: 1.1;
+      letter-spacing: -0.02em;
+      color: var(--text);
+      margin-bottom: 1.25rem;
+    }
+    h1 em {
+      font-style: normal;
+      color: var(--accent);
+    }
+    .hero-sub {
+      font-size: 16px;
+      color: var(--muted);
+      max-width: 520px;
+      margin-bottom: 2rem;
+    }
+    .hero-actions { display: flex; gap: 12px; flex-wrap: wrap; }
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 10px 20px;
+      border-radius: 8px;
+      font-size: 14px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.15s;
+      border: 1px solid transparent;
+    }
+    .btn-primary {
+      background: var(--accent);
+      color: #fff;
+    }
+    .btn-primary:hover { background: #2563eb; }
+    .btn-ghost {
+      background: transparent;
+      color: var(--text);
+      border-color: var(--border);
+    }
+    .btn-ghost:hover { background: var(--surface); border-color: rgba(255,255,255,0.15); }
+
+    /* SECTION */
+    section { padding: 3rem 0; border-bottom: 1px solid var(--border); }
+    .section-label {
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 1.5rem;
+    }
+
+    /* SKILLS */
+    .skills-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+      gap: 10px;
+    }
+    .skill {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 1rem;
+    }
+    .skill-name { font-size: 13px; font-weight: 500; color: var(--text); }
+    .skill-note { font-size: 11px; color: var(--muted); margin-top: 3px; }
+    .skill-dot {
+      width: 8px; height: 8px;
+      border-radius: 50%;
+      margin-bottom: 10px;
+    }
+    .dot-blue { background: #3b82f6; }
+    .dot-purple { background: #8b5cf6; }
+    .dot-green { background: #10b981; }
+    .dot-yellow { background: #f59e0b; }
+    .dot-orange { background: #f97316; }
+
+    /* PROJECTS */
+    .projects-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 12px;
+    }
+    .project {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1.25rem;
+      transition: border-color 0.2s;
+    }
+    .project:hover { border-color: rgba(255,255,255,0.18); }
+    .project.featured { border-color: var(--border-accent); }
+    .project-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 0.75rem;
+    }
+    .project-title { font-size: 14px; font-weight: 600; color: var(--text); }
+    .badge {
+      font-size: 10px;
+      padding: 2px 8px;
+      border-radius: 20px;
+      font-weight: 500;
+      white-space: nowrap;
+    }
+    .badge-wip { background: rgba(245,158,11,0.15); color: #f59e0b; border: 1px solid rgba(245,158,11,0.3); }
+    .badge-open { background: rgba(16,185,129,0.15); color: #10b981; border: 1px solid rgba(16,185,129,0.3); }
+    .project-desc { font-size: 12px; color: var(--muted); line-height: 1.6; margin-bottom: 1rem; }
+    .tags { display: flex; flex-wrap: wrap; gap: 6px; }
+    .tag {
+      font-size: 10px;
+      color: var(--muted);
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      padding: 2px 8px;
+      border-radius: 20px;
+    }
+
+    /* ABOUT */
+    .about-text { font-size: 15px; color: var(--muted); line-height: 1.8; max-width: 600px; }
+    .about-text strong { color: var(--text); font-weight: 500; }
+
+    /* CONTACT */
+    .contact-links { display: flex; gap: 12px; flex-wrap: wrap; }
+
+    /* FOOTER */
+    footer {
+      padding: 2rem 0;
+      font-size: 12px;
+      color: var(--muted);
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+
+<nav>
+  <div class="container">
+    <div class="inner">
+      <div class="logo">Slim<span>lon</span></div>
+      <div class="nav-links">
+        <a href="#projects">Projects</a>
+        <a href="#skills">Skills</a>
+        <a href="#contact">Contact</a>
+      </div>
+    </div>
+  </div>
+</nav>
+
+<div class="container">
+
+  <div class="hero">
+    <div class="hero-eyebrow">open to work &amp; collabs</div>
+    <h1>Game engine dev<br>&amp; <em>3D artist</em></h1>
+    <p class="hero-sub">
+      Building a custom 3D renderer from scratch in C++/CUDA — GPU rasterization, texture mapping, shadow systems. 16 years old, self-taught.
+    </p>
+    <div class="hero-actions">
+      <a href="https://github.com/Slimlon" class="btn btn-primary" target="_blank">GitHub</a>
+      <a href="https://www.fiverr.com" class="btn btn-ghost" target="_blank">Hire me on Fiverr</a>
+    </div>
+  </div>
+
+  <section id="projects">
+    <div class="section-label">Projects</div>
+    <div class="projects-grid">
+      <div class="project featured">
+        <div class="project-header">
+          <div class="project-title">Custom Game Engine</div>
+          <span class="badge badge-wip">in progress</span>
+        </div>
+        <p class="project-desc">C++/CUDA renderer built from zero. GPU rasterization, texture mapping, multi-light shadow mapping. No Unity, no Unreal — pure code.</p>
+        <div class="tags">
+          <span class="tag">C++</span>
+          <span class="tag">CUDA</span>
+          <span class="tag">Shadow Mapping</span>
+          <span class="tag">Rasterization</span>
+        </div>
+      </div>
+      <div class="project">
+        <div class="project-header">
+          <div class="project-title">Survival Civilization FPS</div>
+          <span class="badge badge-wip">in progress</span>
+        </div>
+        <p class="project-desc">Solo-developed FPS game with survival and civilization mechanics. All 3D assets handmade in Blender, powered by the custom engine.</p>
+        <div class="tags">
+          <span class="tag">Game Dev</span>
+          <span class="tag">FPS</span>
+          <span class="tag">Blender</span>
+          <span class="tag">Survival</span>
+        </div>
+      </div>
+      <div class="project">
+        <div class="project-header">
+          <div class="project-title">3D Asset Commissions</div>
+          <span class="badge badge-open">available</span>
+        </div>
+        <p class="project-desc">Custom 3D models and game-ready assets. Props, environments, characters — delivered for Unity and Unreal Engine.</p>
+        <div class="tags">
+          <span class="tag">Blender</span>
+          <span class="tag">Game Assets</span>
+          <span class="tag">Low-poly</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="skills">
+    <div class="section-label">Skills</div>
+    <div class="skills-grid">
+      <div class="skill">
+        <div class="skill-dot dot-blue"></div>
+        <div class="skill-name">C++ / CUDA</div>
+        <div class="skill-note">Renderer, GPU programming</div>
+      </div>
+      <div class="skill">
+        <div class="skill-dot dot-purple"></div>
+        <div class="skill-name">Blender</div>
+        <div class="skill-note">3D modeling, assets</div>
+      </div>
+      <div class="skill">
+        <div class="skill-dot dot-green"></div>
+        <div class="skill-name">Unity</div>
+        <div class="skill-note">Game development</div>
+      </div>
+      <div class="skill">
+        <div class="skill-dot dot-yellow"></div>
+        <div class="skill-name">Python</div>
+        <div class="skill-note">Automation, tools</div>
+      </div>
+      <div class="skill">
+        <div class="skill-dot dot-orange"></div>
+        <div class="skill-name">HTML / CSS</div>
+        <div class="skill-note">Web, portfolio</div>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="section-label">About</div>
+    <p class="about-text">
+      I'm <strong>Slimlon</strong>, a 15-year-old self-taught developer from Germany. For the past 6–8 months I've been building a <strong>game engine from scratch</strong> in C++ with CUDA GPU acceleration — including a custom rasterizer, texture pipeline, and shadow mapping system.<br><br>
+      I'm also a 3D artist working in Blender and building a solo <strong>survival civilization FPS game</strong>. I'm open to freelance work, game dev collabs, and asset commissions.
+    </p>
+  </section>
+
+  <section id="contact">
+    <div class="section-label">Contact</div>
+    <div class="contact-links">
+      <a href="https://github.com/Slimlon" class="btn btn-ghost" target="_blank">GitHub</a>
+      <a href="https://www.fiverr.com" class="btn btn-ghost" target="_blank">Fiverr</a>
+    </div>
+  </section>
+
+</div>
+
+<footer>
+  <div class="container">built by Slimlon — 2025</div>
+</footer>
+
+</body>
+</html>
